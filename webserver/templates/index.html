@@ -67,5 +67,9 @@
             drone.setAttributeNS(null, 'fill', 'red');
           }
       })
+      socket.on('notification', function(data){
+          alert(data.message)
+      })
+     
   </script>
 </body></html>

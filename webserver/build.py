@@ -37,6 +37,12 @@ def translate(coords_osm):
 def map():
     return render_template('index.html')
 
+@app.route('/notify', methods=['POST'])
+def notify():
+    message = request.json.get('message')
+    emit('notification', {'message': message})
+
+
 @socket.on('get_location')
 def get_location():
     while True:

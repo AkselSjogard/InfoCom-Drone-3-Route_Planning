@@ -11,10 +11,10 @@ def travel(from_coords, to_coords, SERVER_URL):
     steps = round(math.sqrt((tlong-flong)**2+(tlat-flat)**2)*100000)
     with requests.Session() as session:
         for i in range(steps):
-            clong = flong + (i+1)*(tlong-flong)/steps
-            clat = flat + (i+1)*(tlat-flat)/steps
+            clong = flong + i*(tlong-flong)/steps
+            clat = flat + i*(tlat-flat)/steps
             current_coords = {
-                'longitude': clong
+                'longitude': clong,
                 'latitude': clat
                 }
             session.post(SERVER_URL, json=current_coords)
@@ -24,6 +24,7 @@ def travel(from_coords, to_coords, SERVER_URL):
 def run(current_coords, from_coords, to_coords, SERVER_URL):
     travel(current_coords, from_coords, SERVER_URL)
     travel(from_coords, to_coords, SERVER_URL)
+    requests.post("http://127.0.0.1:5000/notify", json={"message": "The drone has reached its destination"})
 
     # Complete the while loop:
     # 1. Change the loop condition so that it stops sending location to the data base when the drone arrives the to_address
