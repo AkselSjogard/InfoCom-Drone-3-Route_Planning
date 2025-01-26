@@ -2,30 +2,42 @@ import math
 import requests
 import argparse
 
-#Write you own function that moves the drone from one place to another 
-#the function returns the drone's current location while moving
-#====================================================================================================
-def your_function():
-    longitude = 13.21008
-    latitude = 55.71106
-    return (longitude, latitude)
-#====================================================================================================
+
+def travel(from_coords, to_coords, SERVER_URL):
+    flong = from_coords[0]
+    flat = from_coords[1]
+    tlong = to_coords[0]
+    tlat = to_coords[1]
+    steps = round(math.sqrt((tlong-flong)**2+(tlat-flat)**2)*100000)
+    with requests.Session() as session:
+        for i in range(steps):
+            clong = flong + (i+1)*(tlong-flong)/steps
+            clat = flat + (i+1)*(tlat-flat)/steps
+            current_coords = {
+                'longitude': clong
+                'latitude': clat
+                }
+            session.post(SERVER_URL, json=current_coords)
+
 
 
 def run(current_coords, from_coords, to_coords, SERVER_URL):
+    travel(current_coords, from_coords, SERVER_URL)
+    travel(from_coords, to_coords, SERVER_URL)
+
     # Complete the while loop:
     # 1. Change the loop condition so that it stops sending location to the data base when the drone arrives the to_address
     # 2. Plan a path with your own function, so that the drone moves from [current_address] to [from_address], and the from [from_address] to [to_address]. 
     # 3. While moving, the drone keeps sending it's location to the database.
-    #====================================================================================================
-    while True:
-        drone_coords = your_function()
-        with requests.Session() as session:
-            drone_location = {'longitude': drone_coords[0],
-                              'latitude': drone_coords[1]
-                        }
-            resp = session.post(SERVER_URL, json=drone_location)
-  #====================================================================================================
+#     #====================================================================================================
+#     while True:
+#         drone_coords = your_function()
+#         with requests.Session() as session:
+#             drone_location = {'longitude': drone_coords[0],
+#                               'latitude': drone_coords[1]
+#                         }
+#             resp = session.post(SERVER_URL, json=drone_location)
+#   #====================================================================================================
 
    
 if __name__ == "__main__":
