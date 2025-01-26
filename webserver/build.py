@@ -1,8 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 import time
 import redis
+
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -40,7 +41,7 @@ def map():
 @app.route('/notify', methods=['POST'])
 def notify():
     message = request.json.get('message')
-    emit('notification', {'message': message})
+    socket.emit('notification', {'message': message})
 
 
 @socket.on('get_location')
